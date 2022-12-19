@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='issue.css') }}" type="text/css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <a href="/admin"><p>Dashboard</p></a>
+
+    </div>
+    <form action="/issuebook" method="post">
+        {% with msgs = get_flashed_messages() %}
+    {% if msgs %}
+    {% for msg in msgs %}
+    <p class="flash">{{msg}}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+        <!-- <input type="checkbox" name="" id=""> -->
+        <label for="books">Books:</label>
+        {% for book in books %}
+        <div style="display: flex;">
+        <input type="radio" name="books" id="" value="{{book.id}}"><p>{{book.name.capitalize()}}</p></div>
+        {% endfor %}
+        <label for="studs" style="margin-top: 20px;">Students:</label>
+        
+        {% for stud in studs %}
+        <div style="display: flex;">
+        <input type="radio" name="studs" id="" value="{{stud.id}}"><p>{{stud.name}}</p></div>
+        {% endfor %}
+        <input type="submit" value="Issue">
+    </form>
+</body>
+</html>

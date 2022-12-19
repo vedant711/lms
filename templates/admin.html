@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <div class="header">
+        <p onclick="document.getElementById('add').style.display=(document.getElementById('add').style.display == 'none')?'block' :'none'">Add Book</p>
+        <a href="/issuebook"><p>Issue Book</p></a>
+        <p onclick="document.getElementById('return').style.display=(document.getElementById('return').style.display == 'none')?'block' :'none'" class="return">Return Book</p>
+        
+        <form action="/searchbooks" method="post" id="search">
+            <input type="text" placeholder="Search Books" name="name">
+            <!-- <input type="submit" value=""> -->
+            <button type="submit"><i class='fa fa-search'></i></button>
+        </form>
+        <a href="/logout"><p>Logout</p></a>
+    </div>
+    <form action="/returnbook" id="return" method="post" style="display: none;">
+        <label for="stud_name">Students</label>
+        {% for stud in studs %}
+        <div style="display: flex;margin-top: 10px;"><input type="radio" name="stud_name" id="" value="{{stud.id}}"><p>{{stud.name}}</p></div>
+        {% endfor %}
+        <br>
+        <input type="submit" value="Show Books">
+    </form>
+
+    
+    
+    <div class="container">
+    <p id="time"></p>
+    <script>
+        let show_books = () => {
+            if (document.getElementById('bookstable').style.display=='none') {
+                document.getElementById('bookstable').style.display='block'
+            } else {
+                document.getElementById('bookstable').style.display='none'
+            } document.getElementById('studentstable').style.display='none'
+        }
+
+        let show_studs = () => {
+            if (document.getElementById('studentstable').style.display=='none') {
+                document.getElementById('studentstable').style.display='block'
+            } else {
+                document.getElementById('studentstable').style.display='none'
+            } document.getElementById('bookstable').style.display='none'
+        }
+    </script>
+  
+
+    <h1>Welcome Admin!!</h1>
+    {% with msgs = get_flashed_messages() %}
+    {% if msgs %}
+    {% for msg in msgs %}
+    <p class="flash">{{msg}}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form action="/addbook" method="post" id="add" style="display: none;">
+        <input type="text" name="book" id="" placeholder="Enter Book name">
+        <input type="submit" value="Add Book">
+    </form>
+    <div style="display: flex;" class="select_button">
+    <button onclick="show_books()">Books</button> 
+    <button onclick="show_studs()">Students</button>  </div>
+    <table id="bookstable" style="display: none;">
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <th>Book</th>
+            <th>Delete</th>
+            <th>Edit</th>
+        </tr>
+    
+        {% for book in books %}
+                
+                <tr>
+                    <td>{{book.name.capitalize()}}</td>
+                    <td><a href="/deletebook/{{book.id}}"><button><i class="fa fa-trash"></i></button></a></td>
+                    <td><button onclick="document.getElementById('{{book.id}}').style.display=(document.getElementById('{{book.id}}').style.display == 'none')?'block':'none'"><i class="fa fa-edit" ></i></button></td>
+                    <td id={{book.id}} style="display: none;">
+                        <form action="/editbook/{{book.id}}" method="post">
+                            <input type="text" name="name" id="" placeholder="Enter the new Book name">
+                            <input type="submit" value="Edit">
+                        </form>
+                    </td>
+                </tr>
+        {% endfor %}
+    
+    <!-- <tr><td colspan="3"><a href="/logout"><button>Logout</button></a></td></tr> -->
+    </table>
+    <table id="studentstable" style="display: none;">
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <th>Students</th>
+            <th>Delete</th>
+            <th>Reset</th>
+            <th>Edit</th>
+        </tr>
+    
+        {% for stud in studs %}
+                
+                <tr>
+                    <td>{{stud.name.capitalize()}}</td>
+                    <td><a href="/deletestud/{{stud.id}}"><button><i class="fa fa-trash"></i></button></a></td>
+                    <td><a href="/resetstud/{{stud.id}}"><button>Reset</button></a></td>
+
+                    <td><button onclick="document.getElementById('stud{{stud.id}}').style.display=(document.getElementById('stud{{stud.id}}').style.display == 'none')?'block':'none'"><i class="fa fa-edit" ></i></button></td>
+                    <td id=stud{{stud.id}} style="display: none;">
+                        <form action="/editstud/{{stud.id}}" method="post">
+                            <input type="text" name="name" id="" placeholder="Enter the new Student name">
+                            <input type="submit" value="Edit">
+                        </form>
+                    </td>
+                </tr>
+                
+        {% endfor %}
+        <tr>
+            <td colspan="4"><a href="/deleteall"><button>Delete All Students</button></a></td>
+        </tr>
+    <!-- <tr><td colspan="3"><a href="/logout"><button>Logout</button></a></td></tr> -->
+    </table>
+
+    <script>
+        var datetime = new Date();
+        console.log(datetime);
+        document.getElementById("time").textContent = datetime;
+
+        function refreshTime() {
+            const timeDisplay = document.getElementById("time");
+            const dateString = new Date().toLocaleString();
+            const formattedString = dateString.replace(", ", " - ");
+            timeDisplay.textContent = formattedString;
+        }
+        setInterval(refreshTime, 1000);
+    </script>
+</div>
+
+    
+</body>
+</html>

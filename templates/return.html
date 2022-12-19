@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='issue.css') }}" type="text/css">
+
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <a href="/admin"><p>Dashboard</p></a>
+        
+    </div>
+    <form action="/returned" method="post">
+        {% with msgs = get_flashed_messages() %}
+        {% if msgs %}
+        {% for msg in msgs %}
+        <p class="flash">{{msg}}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% if book1 %}
+        <div style="display: flex;">
+        <input type="radio" name="return" value="{{book1.id}}" id=""><p>{{book1.name.capitalize()}}</p>
+        </div>
+        {% endif %}
+        {% if book2 %}
+        <div style="display: flex;">
+        <input type="radio" name="return" value="{{book2.id}}" id=""><p>{{book2.name.capitalize()}}</p>
+        </div>
+        {% endif %}
+        {% if book3 %}
+        <div style="display: flex;">
+        <input type="radio" name="return" value="{{book3.id}}" id=""><p>{{book3.name.capitalize()}}</p>
+        </div>
+        {% endif %}
+        <input type="text" style="display: none;" value="{{stud.id}}" name="stud_id">
+        <input type="submit" value="Return">
+    </form>
+</body>
+</html>
